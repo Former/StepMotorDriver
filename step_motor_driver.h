@@ -2,6 +2,8 @@
 
 #include <stdint.h>
 #include <vector>
+#include <memory>
+
 typedef unsigned char Byte;
 typedef size_t OperationID;
 typedef uint64_t Time;
@@ -15,6 +17,8 @@ enum OperationType
 
 struct OperationData
 {
+	OperationData();
+	
 	size_t 				MotorID;
 	OperationType 		Type;
 	// Для opt_Set
@@ -25,12 +29,15 @@ struct OperationData
 	size_t 				MaxCount;
 };
 
+class StepMotorDriver;
+
 class StepOperation
 {
 public:
-	StepOperation(OperationData a_Data);
+	StepOperation(StepMotorDriver* a_Driver, OperationData a_Data);
 	~StepOperation();
 	
+	void 	IsRuning();
 	void 	Run();
 	void 	Cancel();
 	size_t 	StepCount();
@@ -38,8 +45,10 @@ public:
 protected:
 	OperationData 	m_Data;
 	OperationID 	m_ID;
-	bool			m_IsRuning;
+	StepMotorDriver*m_Driver;
 };
+
+typedef std::shared_ptr<StepOperation> StepOperationPtr;
 
 struct DriverOperation
 {	

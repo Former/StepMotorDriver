@@ -20,10 +20,15 @@
   <VirtualDirectory Name="resources">
     <File Name="gui.fbp"/>
   </VirtualDirectory>
+  <VirtualDirectory Name="Common">
+    <File Name="Common/thread.cpp"/>
+    <File Name="Common/thread.h"/>
+  </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>
       <Compiler Options="" C_Options="">
         <IncludePath Value="."/>
+        <IncludePath Value="Common"/>
       </Compiler>
       <Linker Options="">
         <LibraryPath Value="."/>
@@ -74,7 +79,8 @@
       <ResourceCompiler Options="$(shell wx-config --rcflags)" Required="no"/>
       <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Bin/Release" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
-        <![CDATA[]]>
+        <![CDATA[
+      ]]>
       </Environment>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
         <PostConnectCommands/>

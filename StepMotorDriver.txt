@@ -1,1 +1,1 @@
-./Bin/Debug/gui.o ./Bin/Debug/main.o ./Bin/Debug/step_motor_driver.o
+./Bin/Debug/gui.o ./Bin/Debug/main.o ./Bin/Debug/step_motor_driver.o ./Bin/Debug/Common_thread.o

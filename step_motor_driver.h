@@ -44,7 +44,7 @@ public:
 	StepOperation(StepMotorDriver* a_Driver, OperationData a_Data);
 	~StepOperation();
 	
-	bool 	IsRuning();
+	bool 	IsRunning();
 	void 	Run();
 	void 	Cancel();
 	size_t 	StepCount();
@@ -54,9 +54,9 @@ protected:
 
 	OperationData 	m_Data;
 	OperationID 	m_ID;
-	StepMotorDriver*m_Driver;
-	TCriticalSection m_Guard;
-	StepOperationWPtr m_This;
+	StepMotorDriver*	m_Driver;
+	TCriticalSection	m_Guard;
+	StepOperationWPtr	m_This;
 };
 
 struct DriverOperation
@@ -73,7 +73,9 @@ class StepMotorDriver : public ThreadClass
 public:
 	StepMotorDriver();
 	~StepMotorDriver();
-
+	
+	bool Init();
+	
 	StepOperationPtr GetOperation(OperationData a_Data);
 	
 protected:

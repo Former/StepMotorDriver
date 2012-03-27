@@ -1,15 +1,16 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Sep  8 2010)
+// C++ code generated with wxFormBuilder (version Mar 19 2012)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#ifndef __gui__
-#define __gui__
+#ifndef __GUI_H__
+#define __GUI_H__
 
+#include <wx/artprov.h>
+#include <wx/xrc/xmlres.h>
 #include <wx/intl.h>
-
 #include <wx/string.h>
 #include <wx/stattext.h>
 #include <wx/gdicmn.h>
@@ -57,13 +58,19 @@ class MainDialogBase : public wxDialog
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnCloseDialog( wxCloseEvent& event ) { event.Skip(); }
+		virtual void OnLeft( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnRight( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnCheck1( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnCheck2( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnCheck3( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnCheck4( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
 		
-		MainDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Step Motor Driver"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 300,-1 ), long style = wxCLOSE_BOX|wxDEFAULT_DIALOG_STYLE );
+		MainDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Step Motor Driver"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 300,-1 ), long style = wxCLOSE_BOX|wxDEFAULT_DIALOG_STYLE ); 
 		~MainDialogBase();
 	
 };
 
-#endif //__gui__
+#endif //__GUI_H__

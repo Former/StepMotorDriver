@@ -29,14 +29,14 @@ void StepOperation::Cancel()
 {
 	TEnterCriticalSection guard(&m_Guard);
 	
-	if (!IsRuning())
+	if (!IsRunning())
 		return;
 	
 	m_Driver->RemoveOperation(m_ID);
 	m_ID = -1;
 }
 
-bool StepOperation::IsRuning()
+bool StepOperation::IsRunning()
 {
 	TEnterCriticalSection guard(&m_Guard);
 
@@ -47,7 +47,7 @@ void StepOperation::Run()
 {
 	TEnterCriticalSection guard(&m_Guard);
 
-	if (IsRuning())
+	if (IsRunning())
 		return;
 	
 	m_ID = m_Driver->AddOperation(m_Data, m_This);	
@@ -67,7 +67,7 @@ void StepOperation::SetThis(StepOperationWPtr a_This)
 
 StepMotorDriver::StepMotorDriver()
 {
-	m_LptDataFile = open("/dev/lpt_data", O_WRONLY);
+	m_LptDataFile = -1;
 }
 
 StepMotorDriver::~StepMotorDriver()
@@ -189,5 +189,14 @@ void StepMotorDriver::WriteToLPT(size_t a_MotorID, unsigned char a_Data)
 {
 	unsigned char data = (a_MotorID << 4) | a_Data;
 	write(m_LptDataFile, &data, 1);
+}
+
+bool StepMotorDriver::Init()
+{
+	m_LptDataFile = open("/dev/lpt_data", O_WRONLY);
+	if (m_LptDataFile < 0)
+		return false;
+	
+	return true;
 }
 

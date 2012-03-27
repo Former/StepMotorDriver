@@ -113,3 +113,19 @@ TEnterCriticalSection::~TEnterCriticalSection()
 	if( m_Block )
 		m_Mutex->Leave();
 }
+
+/////////////////////////////////////////////////
+
+TLeaveCriticalSection::TLeaveCriticalSection(TCriticalSection* a_Mutex, bool a_Block)
+{
+	m_Mutex = a_Mutex;
+	m_Block = a_Block;
+	if( m_Block )
+		m_Mutex->Leave();
+}
+
+TLeaveCriticalSection::~TLeaveCriticalSection()
+{
+	if( m_Block )
+		m_Mutex->Enter();
+}

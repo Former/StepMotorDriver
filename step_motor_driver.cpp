@@ -56,6 +56,9 @@ void StepOperation::Run()
 size_t StepOperation::StepCount()
 {
 	TEnterCriticalSection guard(&m_Guard);
+	
+	// not implemented
+	return 0;
 }
 
 void StepOperation::SetThis(StepOperationWPtr a_This)
@@ -107,13 +110,21 @@ StepOperationPtr StepMotorDriver::DoStepWork()
 	DriverOperation* nextOp = GetNextOperation();
 	if (!nextOp)
 	{
-		Sleep(100);
+		const size_t sleepTime = 100000;
+		{
+			TLeaveCriticalSection leave(&m_Guard);
+			usleep(sleepTime);		
+		}
+		m_CurTime += sleepTime;
 		return StepOperationPtr();	
 	}
 	
-	if (m_CurTime > nextOp->NextStepTime)	
+	if (m_CurTime < nextOp->NextStepTime)	
 	{
-		usleep(m_CurTime - nextOp->NextStepTime);
+		{
+			TLeaveCriticalSection leave(&m_Guard);
+			usleep(nextOp->NextStepTime - m_CurTime);
+		}
 		m_CurTime = nextOp->NextStepTime;		
 	}	
 	
@@ -187,7 +198,7 @@ StepOperationPtr StepMotorDriver::GetOperation(OperationData a_Data)
 
 void StepMotorDriver::WriteToLPT(size_t a_MotorID, unsigned char a_Data)
 {
-	unsigned char data = (a_MotorID << 4) | a_Data;
+	unsigned char data = ((1 << a_MotorID) << 4) | a_Data;
 	write(m_LptDataFile, &data, 1);
 }
 
@@ -195,6 +206,9 @@ bool StepMotorDriver::Init()
 {
 	m_LptDataFile = open("/dev/lpt_data", O_WRONLY);
 	if (m_LptDataFile < 0)
+		return false;
+	
+	if (!Start())
 		return false;
 	
 	return true;

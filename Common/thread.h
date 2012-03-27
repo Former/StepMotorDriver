@@ -55,3 +55,14 @@ private:
 	TCriticalSection*	m_Mutex;
 	bool				m_Block;
 };
+
+class TLeaveCriticalSection
+{
+public:
+	TLeaveCriticalSection(TCriticalSection* a_Mutex, bool a_Block = true);
+	~TLeaveCriticalSection();
+
+private:
+	TCriticalSection*	m_Mutex;
+	bool				m_Block;
+};

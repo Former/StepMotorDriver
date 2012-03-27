@@ -57,6 +57,7 @@ protected:
 	virtual void 	OnCheck4( wxCommandEvent& event );
 	
 	void 			OnLeftOrRight(bool a_Left);
+	bool 			StopLeftOrRightOp();
 	void 			OnCheck();
 	size_t 			GetMotorID();
 	size_t			GetInterval();

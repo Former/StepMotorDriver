@@ -68,7 +68,7 @@ class MainDialogBase : public wxDialog
 	
 	public:
 		
-		MainDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Step Motor Driver"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 300,-1 ), long style = wxCLOSE_BOX|wxDEFAULT_DIALOG_STYLE ); 
+		MainDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Step Motor Driver"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 300,350 ), long style = wxCLOSE_BOX|wxDEFAULT_DIALOG_STYLE ); 
 		~MainDialogBase();
 	
 };

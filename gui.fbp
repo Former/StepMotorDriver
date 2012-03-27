@@ -71,7 +71,7 @@
             <property name="pos"></property>
             <property name="resize">Resizable</property>
             <property name="show">1</property>
-            <property name="size">300,-1</property>
+            <property name="size">300,350</property>
             <property name="style">wxCLOSE_BOX|wxDEFAULT_DIALOG_STYLE</property>
             <property name="subclass"></property>
             <property name="title">Step Motor Driver</property>

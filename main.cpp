@@ -83,10 +83,12 @@ void MainDialog::OnCheck4(wxCommandEvent& event)
 
 void MainDialog::OnLeft(wxCommandEvent& event)
 {
+	OnLeftOrRight(true);
 }
 
 void MainDialog::OnRight(wxCommandEvent& event)
 {
+	OnLeftOrRight(false);
 }
 
 void MainDialog::OnCheck()
@@ -108,42 +110,30 @@ void MainDialog::OnCheck()
 size_t MainDialog::GetMotorID()
 {
 	if (m_motor1->GetValue())
-		return 1 << 3;
+		return 3;
 	if (m_motor2->GetValue())
-		return 1 << 2;
+		return 2;
 	if (m_motor3->GetValue())
-		return 1 << 1;
-	if (m_motor4->GetValue())
 		return 1;
+	if (m_motor4->GetValue())
+		return 0;
 }
 
 void MainDialog::OnLeftOrRight(bool a_Left)
 {
+	if (StopLeftOrRightOp())
+		return;
+
 	OperationData data;
 	if (a_Left)
-	{
-		if (m_LeftOp && m_LeftOp->IsRunning())
-		{
-			m_LeftOp->Cancel();
-			m_LeftOp.reset();
-			return;
-		}
 		data.Type = opt_Left;
-	}
 	else
-	{
-		if (m_RightOp && m_RightOp->IsRunning())
-		{
-			m_RightOp->Cancel();
-			m_RightOp.reset();
-			return;
-		}
 		data.Type = opt_Right;
-	}
 	
 	data.MotorID	= GetMotorID();
 	data.BufSteps	= GetBufSteps();
 	data.Interval	= GetInterval();
+	data.MaxCount	= (size_t)(-1);
 	
 	if (a_Left)
 	{
@@ -176,5 +166,24 @@ size_t MainDialog::GetInterval()
 	unsigned long ret = 0;
 	sInerval.ToULong(&ret);
 	return ret;
+}
+
+bool MainDialog::StopLeftOrRightOp()
+{
+	if (m_LeftOp && m_LeftOp->IsRunning())
+	{
+		m_LeftOp->Cancel();
+		m_LeftOp.reset();
+		return true;
+	}
+	
+	if (m_RightOp && m_RightOp->IsRunning())
+	{
+		m_RightOp->Cancel();
+		m_RightOp.reset();
+		return true;
+	}
+	
+	return false;
 }
 

@@ -200,6 +200,12 @@ void StepMotorDriver::WriteToLPT(size_t a_MotorID, unsigned char a_Data)
 {
 	unsigned char data = ((1 << a_MotorID) << 4) | a_Data;
 	write(m_LptDataFile, &data, 1);
+	usleep(10);
+	m_CurTime += 10;
+
+	// Обнуляем данные на ЛПТ порте, чтобы не повлияла скорость записи в порт, на данные в другом MotorID 
+	unsigned char zeroID = a_Data;
+	write(m_LptDataFile, &zeroID, 1);
 }
 
 bool StepMotorDriver::Init()

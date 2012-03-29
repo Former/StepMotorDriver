@@ -46,8 +46,10 @@ class MainDialogBase : public wxDialog
 		wxStaticLine* m_staticline1;
 		wxStaticText* m_staticText1;
 		wxStaticText* m_staticText2;
+		wxStaticText* m_staticText5;
 		wxComboBox* m_comboBoxSteps;
 		wxComboBox* m_comboBoxInterval;
+		wxComboBox* m_comboStepCount;
 		wxButton* m_buttonLeft;
 		wxButton* m_buttonRight;
 		wxStaticText* m_staticText4;

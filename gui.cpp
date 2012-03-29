@@ -52,16 +52,38 @@ MainDialogBase::MainDialogBase( wxWindow* parent, wxWindowID id, const wxString&
 	wxBoxSizer* bSizer8;
 	bSizer8 = new wxBoxSizer( wxVERTICAL );
 	
+	wxBoxSizer* bSizer91;
+	bSizer91 = new wxBoxSizer( wxVERTICAL );
+	
 	m_staticText1 = new wxStaticText( m_BackGroundPanel, wxID_ANY, _("Steps"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText1->Wrap( -1 );
-	bSizer8->Add( m_staticText1, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
+	bSizer91->Add( m_staticText1, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
+	
+	
+	bSizer8->Add( bSizer91, 1, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer101;
+	bSizer101 = new wxBoxSizer( wxVERTICAL );
 	
 	m_staticText2 = new wxStaticText( m_BackGroundPanel, wxID_ANY, _("Interval"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText2->Wrap( -1 );
-	bSizer8->Add( m_staticText2, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
+	bSizer101->Add( m_staticText2, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
 	
 	
-	bSizer9->Add( bSizer8, 0, wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer8->Add( bSizer101, 1, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer111;
+	bSizer111 = new wxBoxSizer( wxVERTICAL );
+	
+	m_staticText5 = new wxStaticText( m_BackGroundPanel, wxID_ANY, _("Step count"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText5->Wrap( -1 );
+	bSizer111->Add( m_staticText5, 0, wxALL|wxALIGN_RIGHT, 5 );
+	
+	
+	bSizer8->Add( bSizer111, 1, wxEXPAND, 5 );
+	
+	
+	bSizer9->Add( bSizer8, 0, wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer10;
 	bSizer10 = new wxBoxSizer( wxVERTICAL );
@@ -76,6 +98,9 @@ MainDialogBase::MainDialogBase( wxWindow* parent, wxWindowID id, const wxString&
 	m_comboBoxInterval->Append( _("2500") );
 	m_comboBoxInterval->Append( _("500000") );
 	bSizer10->Add( m_comboBoxInterval, 0, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_comboStepCount = new wxComboBox( m_BackGroundPanel, wxID_ANY, _("300"), wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	bSizer10->Add( m_comboStepCount, 0, wxALL, 5 );
 	
 	
 	bSizer9->Add( bSizer10, 1, wxALIGN_CENTER_VERTICAL, 5 );

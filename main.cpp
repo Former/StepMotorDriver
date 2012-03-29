@@ -83,12 +83,12 @@ void MainDialog::OnCheck4(wxCommandEvent& event)
 
 void MainDialog::OnLeft(wxCommandEvent& event)
 {
-	OnLeftOrRight(true);
+	OnLeftOrRight(true, GetMotorID());
 }
 
 void MainDialog::OnRight(wxCommandEvent& event)
 {
-	OnLeftOrRight(false);
+	OnLeftOrRight(false, GetMotorID());
 }
 
 void MainDialog::OnCheck()
@@ -119,32 +119,22 @@ size_t MainDialog::GetMotorID()
 		return 0;
 }
 
-void MainDialog::OnLeftOrRight(bool a_Left)
+void MainDialog::OnLeftOrRight(bool a_Left, size_t a_Index)
 {
-	if (StopLeftOrRightOp())
+	if (StopLeftOrRightOp(a_Index))
 		return;
-
-	OperationData data;
-	if (a_Left)
-		data.Type = opt_Left;
-	else
-		data.Type = opt_Right;
 	
+	OperationData data;
+	
+	data.Type		= a_Left ? opt_Left : opt_Right;
 	data.MotorID	= GetMotorID();
 	data.BufSteps	= GetBufSteps();
 	data.Interval	= GetInterval();
-	data.MaxCount	= (size_t)(-1);
+	data.MaxCount	= GetMaxCount();
 	
-	if (a_Left)
-	{
-		m_LeftOp = m_Driver.GetOperation(data);
-		m_LeftOp->Run();
-	}	
-	else
-	{
-		m_RightOp = m_Driver.GetOperation(data);
-		m_RightOp->Run();
-	}	
+	StepOperationPtr& op = a_Left ? m_LeftOp[a_Index] : m_RightOp[a_Index];
+	op = m_Driver.GetOperation(data);
+	op->Run();
 }
 
 std::vector<Byte> MainDialog::GetBufSteps()
@@ -168,22 +158,36 @@ size_t MainDialog::GetInterval()
 	return ret;
 }
 
-bool MainDialog::StopLeftOrRightOp()
+bool MainDialog::StopLeftOrRightOp(size_t a_Index)
 {
-	if (m_LeftOp && m_LeftOp->IsRunning())
 	{
-		m_LeftOp->Cancel();
-		m_LeftOp.reset();
-		return true;
+		StepOperationPtr& op = m_LeftOp[a_Index];
+		if (op && op->IsRunning())
+		{
+			op->Cancel();
+			op.reset();
+			return true;
+		}
 	}
 	
-	if (m_RightOp && m_RightOp->IsRunning())
 	{
-		m_RightOp->Cancel();
-		m_RightOp.reset();
-		return true;
+		StepOperationPtr& op = m_RightOp[a_Index];
+		if (op && op->IsRunning())
+		{
+			op->Cancel();
+			op.reset();
+			return true;
+		}
 	}
 	
 	return false;
+}
+
+size_t MainDialog::GetMaxCount()
+{
+	wxString sCount = m_comboStepCount->GetValue();
+	unsigned long ret = 0;
+	sCount.ToULong(&ret);
+	return ret;
 }
 

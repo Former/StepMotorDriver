@@ -56,19 +56,20 @@ protected:
 	virtual void 	OnCheck3( wxCommandEvent& event );
 	virtual void 	OnCheck4( wxCommandEvent& event );
 	
-	void 			OnLeftOrRight(bool a_Left);
-	bool 			StopLeftOrRightOp();
+	void 			OnLeftOrRight(bool a_Left, size_t a_Index);
+	bool 			StopLeftOrRightOp(size_t a_Index);
 	void 			OnCheck();
 	size_t 			GetMotorID();
 	size_t			GetInterval();
+	size_t			GetMaxCount();
 	std::vector<Byte> GetBufSteps();
 	
 private:
 	
 	StepMotorDriver m_Driver;
 	StepOperationPtr m_LatsCheckOperation;
-	StepOperationPtr m_LeftOp;
-	StepOperationPtr m_RightOp;
+	StepOperationPtr m_LeftOp[4];
+	StepOperationPtr m_RightOp[4];
 };
 
 #endif //__main__

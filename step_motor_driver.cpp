@@ -19,7 +19,7 @@ StepOperation::StepOperation(StepMotorDriver* a_Driver, OperationData a_Data)
 {
 	m_Driver	= a_Driver;
 	m_Data		= a_Data;
-	m_ID		= -1;
+	m_ID		= 0;
 }
 
 StepOperation::~StepOperation()
@@ -35,14 +35,14 @@ void StepOperation::Cancel()
 		return;
 	
 	m_Driver->RemoveOperation(m_ID);
-	m_ID = -1;
+	m_ID = 0;
 }
 
 bool StepOperation::IsRunning()
 {
 	TEnterCriticalSection guard(&m_Guard);
 
-	return (m_ID != (size_t)(-1));
+	return !!m_ID;
 }
 
 void StepOperation::Run()
@@ -90,8 +90,8 @@ OperationID StepMotorDriver::AddOperation(OperationData a_Data, StepOperationWPt
 	op.StepCount = 0;
 	op.Operation = a_Op;
 	
-	OperationID result = m_Operations.size();
-	m_Operations[ToPointer(a_Op.lock().get())] = op;
+	OperationID result = ToPointer(a_Op.lock().get());
+	m_Operations[result] = op;
 	
 	return result;
 }
@@ -100,9 +100,9 @@ void StepMotorDriver::RemoveOperation(OperationID a_ID)
 {
 	TEnterCriticalSection guard(&m_Guard);
 
-	wxASSERT(a_ID >=0 && a_ID < m_Operations.size());
+	wxASSERT(m_Operations.find((Pointer)a_ID) != m_Operations.end());
 	
-	m_Operations.erase(a_ID);
+	m_Operations.erase((Pointer)a_ID);
 }
 
 StepOperationPtr StepMotorDriver::DoStepWork()
@@ -166,11 +166,14 @@ DriverOperation* StepMotorDriver::GetNextOperation()
 	if (!m_Operations.size())
 		return 0;
 	
-	DriverOperation* nextOp = &m_Operations[0];
-	for (size_t i = 1; i < m_Operations.size(); i++)
+	DriverOperation* nextOp = 0;
+	for (OpMap::iterator it = m_Operations.begin(); it != m_Operations.end(); it++)
 	{
-		if (m_Operations[i].NextStepTime < nextOp->NextStepTime)
-			nextOp = &m_Operations[i];
+		if (!nextOp)
+			nextOp = &it->second;
+		
+		if (it->second.NextStepTime < nextOp->NextStepTime)
+			nextOp = &it->second;
 	}
 	
 	return nextOp;

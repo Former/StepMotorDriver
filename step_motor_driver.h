@@ -2,11 +2,13 @@
 
 #include <stdint.h>
 #include <vector>
+#include <map>
 #include <tr1/memory>
 #include <thread.h>
 
 typedef unsigned char Byte;
-typedef size_t OperationID;
+typedef uint64_t Pointer;
+typedef Pointer OperationID;
 typedef uint64_t Time;
 
 enum OperationType
@@ -69,6 +71,8 @@ struct DriverOperation
 
 class StepMotorDriver : public ThreadClass
 {
+	typedef std::map<Pointer, DriverOperation> OpMap;
+	
 	friend class StepOperation;
 public:
 	StepMotorDriver();
@@ -92,7 +96,7 @@ private:
 	
 	TCriticalSection m_Guard;
 	Time		m_CurTime;
-	std::vector<DriverOperation> m_Operations;
+	OpMap		m_Operations;
 	int 		m_LptDataFile;
 };
 

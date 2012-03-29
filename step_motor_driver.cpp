@@ -1,6 +1,8 @@
 #include <fcntl.h>
 #include "step_motor_driver.h"
 
+#define ToPointer(a_Ptr)	((Pointer)reinterpret_cast<long long>(a_Ptr))
+
 OperationData::OperationData()
 {
 	MotorID 	= 0;
@@ -89,7 +91,7 @@ OperationID StepMotorDriver::AddOperation(OperationData a_Data, StepOperationWPt
 	op.Operation = a_Op;
 	
 	OperationID result = m_Operations.size();
-	m_Operations.push_back(op);
+	m_Operations[ToPointer(a_Op.lock().get())] = op;
 	
 	return result;
 }
@@ -100,7 +102,7 @@ void StepMotorDriver::RemoveOperation(OperationID a_ID)
 
 	wxASSERT(a_ID >=0 && a_ID < m_Operations.size());
 	
-	m_Operations.erase(m_Operations.begin() + a_ID);
+	m_Operations.erase(a_ID);
 }
 
 StepOperationPtr StepMotorDriver::DoStepWork()

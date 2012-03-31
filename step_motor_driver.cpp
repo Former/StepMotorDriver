@@ -84,11 +84,11 @@ OperationID StepMotorDriver::AddOperation(OperationData a_Data, StepOperationWPt
 {
 	TEnterCriticalSection guard(&m_Guard);
 	
-	DriverOperation op;
-	op.Data = a_Data;
-	op.NextStepTime = m_CurTime;
-	op.StepCount = 0;
-	op.Operation = a_Op;
+	DriverOperationPtr op(new DriverOperation);
+	op->Data = a_Data;
+	op->NextStepTime = m_CurTime;
+	op->StepCount = 0;
+	op->Operation = a_Op;
 	
 	OperationID result = ToPointer(a_Op.lock().get());
 	m_Operations[result] = op;
@@ -109,7 +109,7 @@ StepOperationPtr StepMotorDriver::DoStepWork()
 {
 	TEnterCriticalSection guard(&m_Guard);
 	
-	DriverOperation* nextOp = GetNextOperation();
+	DriverOperationPtr nextOp = GetNextOperation();
 	if (!nextOp)
 	{
 		const size_t sleepTime = 100000;
@@ -159,21 +159,21 @@ StepOperationPtr StepMotorDriver::DoStepWork()
 	return StepOperationPtr();
 }
 
-DriverOperation* StepMotorDriver::GetNextOperation()
+DriverOperationPtr StepMotorDriver::GetNextOperation()
 {
 	TEnterCriticalSection guard(&m_Guard);
 	
 	if (!m_Operations.size())
-		return 0;
+		return DriverOperationPtr();
 	
-	DriverOperation* nextOp = 0;
+	DriverOperationPtr nextOp;
 	for (OpMap::iterator it = m_Operations.begin(); it != m_Operations.end(); it++)
 	{
 		if (!nextOp)
-			nextOp = &it->second;
+			nextOp = it->second;
 		
-		if (it->second.NextStepTime < nextOp->NextStepTime)
-			nextOp = &it->second;
+		if (it->second->NextStepTime < nextOp->NextStepTime)
+			nextOp = it->second;
 	}
 	
 	return nextOp;

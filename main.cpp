@@ -117,6 +117,7 @@ size_t MainDialog::GetMotorID()
 		return 1;
 	if (m_motor4->GetValue())
 		return 0;
+	return 0;
 }
 
 void MainDialog::OnLeftOrRight(bool a_Left, size_t a_Index)

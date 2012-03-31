@@ -69,9 +69,12 @@ struct DriverOperation
 	StepOperationWPtr Operation;
 };
 
+typedef std::tr1::shared_ptr<DriverOperation>	DriverOperationPtr;
+typedef std::tr1::weak_ptr<DriverOperation>		DriverOperationWPtr;
+
 class StepMotorDriver : public ThreadClass
 {
-	typedef std::map<Pointer, DriverOperation> OpMap;
+	typedef std::map<Pointer, DriverOperationPtr> OpMap;
 	
 	friend class StepOperation;
 public:
@@ -90,7 +93,7 @@ private:
 	virtual ThreadRet 	EntryPoint(UserData a_UserData);
 
 	StepOperationPtr DoStepWork();
-	DriverOperation* GetNextOperation();
+	DriverOperationPtr GetNextOperation();
 	
 	void 		WriteToLPT(size_t a_MotorID, unsigned char a_Data);
 	
